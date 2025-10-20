@@ -3,12 +3,14 @@ from django.conf import settings
 
 class BasePost(models.Model):
     """Class representing a base fields"""
-    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="%(app_label)s_%(class)s_posts")
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, 
+                            related_name="%(app_label)s_%(class)s_posts")
     location = models.CharField(max_length=255)
     image = models.ImageField(upload_to='photo_storage/')
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
+        """Metadata for BasePost"""
         abstract = True
 
 class BigfootPost(BasePost):

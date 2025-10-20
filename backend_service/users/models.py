@@ -18,7 +18,7 @@ class HunterIP(models.Model):
     """Class for storing hashed IP addresses reported by users."""
     ip_hash = models.CharField(max_length=64, unique=True, null=False)
     added_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reported_ips')
-    
+
     def set_ip(self, ip_address):
         self.ip_hash = hashlib.sha256(ip_address.encode()).hexdigest()
 

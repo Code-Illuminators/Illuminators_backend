@@ -9,6 +9,7 @@ User = get_user_model()
 class UserSerializer(serializers.ModelSerializer):
     """Serializer for creating and viewing User instances."""
     class Meta:
+        """Metadata for UserSerializer."""
         model = User
         fields = ['id', 'username', 'email', 'password', 'role']
         extra_kwargs = {'password': {'write_only': True}}
@@ -20,6 +21,7 @@ class UserSerializer(serializers.ModelSerializer):
 class UserUpdateSerializer(serializers.ModelSerializer):
     """Serializer for updating existing User instances."""
     class Meta:
+        """Metadata for UserUpdateSerializer."""
         model = User
         fields = ['username', 'email', 'role']
 

@@ -29,7 +29,7 @@ def change_password(request):
     user = request.user
     new_password = request.data.get('new_password')
     if not new_password:
-        return Response({'error': 'New password required'}, status=400)    
+        return Response({'error': 'New password required'}, status=400)
     user.password = make_password(new_password)
     user.save()
     return Response({'success': 'Password changed successfully'})
