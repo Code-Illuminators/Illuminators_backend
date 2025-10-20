@@ -1,10 +1,11 @@
 from rest_framework import status
-from .models import BigfootPost, UfoPost, GhostPost, OtherPost
-from .serializers import BigfootPostSerializer, UfoPostSerializer, GhostPostSerializer, OtherPostSerializer
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from django.contrib.auth import get_user_model
 from rest_framework.permissions import IsAuthenticated
+from .models import BigfootPost, UfoPost, GhostPost, OtherPost
+from .serializers import BigfootPostSerializer, UfoPostSerializer
+from .serializers import GhostPostSerializer, OtherPostSerializer
 
 User = get_user_model()
 
@@ -43,8 +44,8 @@ def update_bigfoot(request, pk):
     except BigfootPost.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
     if post.owner != request.user:
-        return Response({'error': 'Not authorized to edit this post'}, 
-                        status=status.HTTP_403_FORBIDDEN)
+        return Response({'error': 'Not authorized to edit this post'},
+                    status=status.HTTP_403_FORBIDDEN)
     serializer = BigfootPostSerializer(post, data=request.data, partial=True)
     if serializer.is_valid():
         serializer.save()
@@ -61,8 +62,8 @@ def delete_bigfoot(request, pk):
     if post.owner == request.user or request.user.role == 'gold':
         post.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-    return Response({'error': 'Not authorized to delete this post'}, 
-                    status=status.HTTP_403_FORBIDDEN)
+    return Response({'error': 'Not authorized to delete this post'},
+                status=status.HTTP_403_FORBIDDEN)
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -99,8 +100,8 @@ def update_ufo(request, pk):
     except UfoPost.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
     if post.owner != request.user:
-        return Response({'error': 'Not authorized to edit this post'}, 
-                        status=status.HTTP_403_FORBIDDEN)
+        return Response({'error': 'Not authorized to edit this post'},
+                    status=status.HTTP_403_FORBIDDEN)
     serializer = UfoPostSerializer(post, data=request.data, partial=True)
     if serializer.is_valid():
         serializer.save()
@@ -117,8 +118,8 @@ def delete_ufo(request, pk):
     if post.owner == request.user or request.user.role == 'gold':
         post.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-    return Response({'error': 'Not authorized to delete this post'}, 
-                    status=status.HTTP_403_FORBIDDEN)
+    return Response({'error': 'Not authorized to delete this post'},
+                status=status.HTTP_403_FORBIDDEN)
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -155,8 +156,8 @@ def update_ghost(request, pk):
     except GhostPost.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
     if post.owner != request.user:
-        return Response({'error': 'Not authorized to edit this post'}, 
-                        status=status.HTTP_403_FORBIDDEN)
+        return Response({'error': 'Not authorized to edit this post'},
+                    status=status.HTTP_403_FORBIDDEN)
     serializer = GhostPostSerializer(post, data=request.data, partial=True)
     if serializer.is_valid():
         serializer.save()
@@ -173,8 +174,8 @@ def delete_ghost(request, pk):
     if post.owner == request.user or request.user.role == 'gold':
         post.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-    return Response({'error': 'Not authorized to delete this post'}, 
-                    status=status.HTTP_403_FORBIDDEN)
+    return Response({'error': 'Not authorized to delete this post'},
+                status=status.HTTP_403_FORBIDDEN)
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -211,8 +212,8 @@ def update_other(request, pk):
     except OtherPost.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
     if post.owner != request.user:
-        return Response({'error': 'Not authorized to edit this post'}, 
-                        status=status.HTTP_403_FORBIDDEN)
+        return Response({'error': 'Not authorized to edit this post'},
+                    status=status.HTTP_403_FORBIDDEN)
     serializer = OtherPostSerializer(post, data=request.data, partial=True)
     if serializer.is_valid():
         serializer.save()
@@ -229,5 +230,5 @@ def delete_other(request, pk):
     if post.owner == request.user or request.user.role == 'gold':
         post.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-    return Response({'error': 'Not authorized to delete this post'}, 
-                    status=status.HTTP_403_FORBIDDEN)
+    return Response({'error': 'Not authorized to delete this post'},
+                status=status.HTTP_403_FORBIDDEN)
