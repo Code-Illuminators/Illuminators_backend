@@ -3,9 +3,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth import get_user_model
-from .serializers import UserSerializer, UserUpdateSerializer, HunterIPSerializer
 from django.contrib.auth.hashers import make_password
-
+from .serializers import UserSerializer, UserUpdateSerializer, HunterIPSerializer
 
 User = get_user_model()
 
@@ -30,8 +29,7 @@ def change_password(request):
     user = request.user
     new_password = request.data.get('new_password')
     if not new_password:
-        return Response({'error': 'New password required'}, status=400)
-    
+        return Response({'error': 'New password required'}, status=400)    
     user.password = make_password(new_password)
     user.save()
     return Response({'success': 'Password changed successfully'})

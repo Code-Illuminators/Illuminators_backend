@@ -12,4 +12,3 @@ urlpatterns = [
     path('update-profile/', views.update_profile, name='update_profile'),
     path('report-hunter-ip/', views.report_hunter_ip, name='report_hunter_ip'),
 ]
-
