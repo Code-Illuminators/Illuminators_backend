@@ -1,0 +1,29 @@
+version: "3.9"
+
+services:
+  db:
+    image: mariadb:11
+    restart: always
+    env_file:
+      - .env
+    environment:
+      ALLOW_EMPTY_PASSWORD: yes
+    ports:
+      - "3307:3306"
+    volumes:
+      - mariadb_data:/var/lib/mysql
+
+  backend:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/backend
+      - ./photo_storage:/backend/photo_storage
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    env_file:
+      - .env
+volumes:
+  mariadb_data:

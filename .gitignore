@@ -1,0 +1,7 @@
+__pycache__/
+db.sqlite3
+photo_storage/
+debug.log
+.env
+env/
+.gitignore
