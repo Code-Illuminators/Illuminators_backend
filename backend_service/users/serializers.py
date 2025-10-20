@@ -1,8 +1,8 @@
+import re
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import make_password
-from .models import Hunter_IP
-import re
+from .models import HunterIP
 
 User = get_user_model()
 
@@ -32,7 +32,7 @@ class UserUpdateSerializer(serializers.ModelSerializer):
 class HunterIPSerializer(serializers.ModelSerializer):
     ip_address = serializers.CharField(write_only=True)
     class Meta:
-        model = Hunter_IP
+        model = HunterIP
         fields = ['ip_address', 'added_by']
 
     def validate_ip_address(self, value):
@@ -43,7 +43,7 @@ class HunterIPSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         ip_address = validated_data.pop('ip_address')
-        hunter_ip = Hunter_IP(added_by=validated_data['added_by'])
+        hunter_ip = HunterIP(added_by=validated_data['added_by'])
         hunter_ip.set_ip(ip_address)
         hunter_ip.save()
         return hunter_ip

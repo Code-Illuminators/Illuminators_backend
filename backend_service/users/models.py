@@ -1,6 +1,6 @@
+import hashlib
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-import hashlib
 
 class User(AbstractUser):
     ROLE_CHOICES = [
@@ -13,7 +13,7 @@ class User(AbstractUser):
     def __str__(self):
         return f"{self.username} ({self.get_role_display()})"
 
-class Hunter_IP(models.Model):
+class HunterIP(models.Model):
     ip_hash = models.CharField(max_length=64, unique=True, null=False)
     added_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reported_ips')
     
@@ -25,3 +25,4 @@ class Hunter_IP(models.Model):
 
     def __str__(self):
         return f"IP reported by {self.added_by.username}"
+    
