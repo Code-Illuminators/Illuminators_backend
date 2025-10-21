@@ -2,7 +2,7 @@ import re
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import make_password
-from .models import HunterIP
+from .models import Government, EntryPassword
 
 User = get_user_model()
 
@@ -32,11 +32,39 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
-class HunterIPSerializer(serializers.ModelSerializer):
-    """Serializer for creating and validating HunterIP instances."""
+class EntryPasswordCheckSerializer(serializers.Serializer):
+    """Serializer for checking entry password access."""
+    password = serializers.CharField(write_only=True, max_length=128)
+    def validate_password(self, value):
+        try:
+            entry_password = EntryPassword.objects.last()
+            if not entry_password.check_password(value):
+                raise serializers.ValidationError("Invalid password!")
+            return value
+        except EntryPassword.DoesNotExist:
+            raise serializers.ValidationError("Password is not set!")
+
+class EntryPasswordSerializer(serializers.ModelSerializer):
+    """Serializer for set entry password."""
+    password = serializers.CharField(write_only=True, max_length=128)
+    class Meta:
+        """Metadata for EntryPasswordSerializer."""
+        model = EntryPassword
+        fields = ['password']
+
+    def create(self, value):
+        password = value.pop('password')
+        entry_password = EntryPassword()
+        entry_password.set_password(password)
+        entry_password.save()
+        return entry_password
+
+class GovernmentSerializer(serializers.ModelSerializer):
+    """Serializer for creating and validating Government instances."""
     ip_address = serializers.CharField(write_only=True)
     class Meta:
-        model = HunterIP
+        """Metadata for GovernmentSerializer."""
+        model = Government
         fields = ['ip_address', 'added_by']
 
     def validate_ip_address(self, value):
@@ -47,7 +75,7 @@ class HunterIPSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         ip_address = validated_data.pop('ip_address')
-        hunter_ip = HunterIP(added_by=validated_data['added_by'])
-        hunter_ip.set_ip(ip_address)
-        hunter_ip.save()
-        return hunter_ip
+        government_ip = Government(added_by=validated_data['added_by'])
+        government_ip.set_ip(ip_address)
+        government_ip.save()
+        return government_ip

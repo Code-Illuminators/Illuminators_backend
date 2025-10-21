@@ -11,4 +11,8 @@ urlpatterns = [
     path('change-password/', views.change_password, name='change_password'),
     path('update-profile/', views.update_profile, name='update_profile'),
     path('report-hunter-ip/', views.report_hunter_ip, name='report_hunter_ip'),
+    path('entry-password/check/', views.check_entry_password, name='check_password'),
+    path('entry-password/set/', views.set_entry_password, name='set_password'),
+    path('entry-password/delete/<int:password_id>/', views.delete_entry_password, name='delete_password'),
+    path('entry-password/active/', views.get_active_password, name='active_password'),
 ]
