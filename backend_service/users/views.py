@@ -36,11 +36,10 @@ def delete_entry_password(request, password_id):
 
 @api_view(['GET'])
 def get_active_password(request):
-    try:
-        entry_password = EntryPassword.objects.last()
-        return Response({'active_password_id': entry_password.id, 'exists': True})
-    except EntryPassword.DoesNotExist:
-        return Response({'exists': False,'message': 'There is not active password'})
+    entry_password = EntryPassword.objects.last()
+    if entry_password is None:
+        return Response({'exists': False,'message': 'There is not active password'}, status=status.HTTP_400_BAD_REQUEST)
+    return Response({'active_password_id': entry_password.id, 'exists': True}, status=status.HTTP_200_OK)        
 
 @api_view(['POST'])
 def register_user(request):
