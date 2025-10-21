@@ -61,7 +61,7 @@ def delete_bigfoot(request, pk):
         return Response(status=status.HTTP_404_NOT_FOUND)
     if post.owner == request.user or request.user.role == 'gold':
         post.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response({'success': True}, status=status.HTTP_204_NO_CONTENT)
     return Response({'error': 'Not authorized to delete this post'},
                 status=status.HTTP_403_FORBIDDEN)
 
@@ -117,7 +117,7 @@ def delete_ufo(request, pk):
         return Response(status=status.HTTP_404_NOT_FOUND)
     if post.owner == request.user or request.user.role == 'gold':
         post.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response({'success': True}, status=status.HTTP_204_NO_CONTENT)
     return Response({'error': 'Not authorized to delete this post'},
                 status=status.HTTP_403_FORBIDDEN)
 
@@ -173,7 +173,7 @@ def delete_ghost(request, pk):
         return Response(status=status.HTTP_404_NOT_FOUND)
     if post.owner == request.user or request.user.role == 'gold':
         post.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response({'success': True}, status=status.HTTP_204_NO_CONTENT)
     return Response({'error': 'Not authorized to delete this post'},
                 status=status.HTTP_403_FORBIDDEN)
 
@@ -229,6 +229,6 @@ def delete_other(request, pk):
         return Response(status=status.HTTP_404_NOT_FOUND)
     if post.owner == request.user or request.user.role == 'gold':
         post.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response({'success': True}, status=status.HTTP_204_NO_CONTENT)
     return Response({'error': 'Not authorized to delete this post'},
                 status=status.HTTP_403_FORBIDDEN)
