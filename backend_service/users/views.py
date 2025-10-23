@@ -12,6 +12,7 @@ User = get_user_model()
 
 @api_view(['POST'])
 def check_entry_password(request):
+    """Check if the provided entry password is valid"""
     serializer = EntryPasswordCheckSerializer(data=request.data)
     if serializer.is_valid():
         return Response({'valid': True,'message': 'Succses!'}, status=status.HTTP_200_OK)
@@ -19,6 +20,7 @@ def check_entry_password(request):
 
 @api_view(['POST'])
 def set_entry_password(request):
+    """Set a new entry password"""
     serializer = EntryPasswordSerializer(data=request.data)
     if serializer.is_valid():
         entry_password = serializer.save()
@@ -27,6 +29,7 @@ def set_entry_password(request):
 
 @api_view(['DELETE'])
 def delete_entry_password(request, password_id):
+    """Delete an entry password by its ID"""
     try:
         entry_password = EntryPassword.objects.get(id=password_id)
         entry_password.delete()
@@ -36,6 +39,7 @@ def delete_entry_password(request, password_id):
 
 @api_view(['GET'])
 def get_active_password(request):
+    """Retrieve the ID of the most recently set entry password"""
     entry_password = EntryPassword.objects.last()
     if entry_password is None:
         return Response({'exists': False,'message': 'There is not active password'}, status=status.HTTP_400_BAD_REQUEST)
@@ -43,6 +47,7 @@ def get_active_password(request):
 
 @api_view(['POST'])
 def register_user(request):
+    """Register a new user"""
     serializer = UserSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
@@ -52,6 +57,7 @@ def register_user(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def users_list(request):
+    """Retrieve a list of all users"""
     users = User.objects.all()
     serializer = UserSerializer(users, many=True)
     return Response(serializer.data)
@@ -59,6 +65,7 @@ def users_list(request):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def change_password(request):
+    """Change the password for the authenticated user"""    
     user = request.user
     new_password = request.data.get('new_password')
     if not new_password:
@@ -70,6 +77,7 @@ def change_password(request):
 @api_view(['PATCH'])
 @permission_classes([IsAuthenticated])
 def update_profile(request):
+    """Update the profile of the authenticated user"""
     user = request.user
     serializer = UserUpdateSerializer(user, data=request.data, partial=True)
     if serializer.is_valid():
@@ -79,7 +87,8 @@ def update_profile(request):
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-def report_hunter_ip(request):
+def report_government_ip(request):
+    """Report a IP address by hashing and storing it"""
     serializer = GovernmentSerializer(data=request.data, context={'request': request})
     if serializer.is_valid():
         serializer.save(added_by=request.user)
