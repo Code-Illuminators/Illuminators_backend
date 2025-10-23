@@ -1,3 +1,4 @@
+"""Module for defining Django models related to user management and IP/password handling"""
 import hashlib
 from django.db import models
 from django.contrib.auth.models import AbstractUser

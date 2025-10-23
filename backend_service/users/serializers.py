@@ -1,3 +1,4 @@
+"""Module for defining serializers related to user management and IP/password handling"""
 import re
 from rest_framework import serializers
 from django.contrib.auth import get_user_model

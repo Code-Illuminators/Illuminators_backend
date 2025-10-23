@@ -19,7 +19,8 @@ class Migration(migrations.Migration):
                                         serialize=False, verbose_name='ID')),
                 ('ip_hash', models.CharField(max_length=64, unique=True)),
                 ('added_by', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE,
-                                            related_name='reported_ips', to=settings.AUTH_USER_MODEL)),
+                                            related_name='reported_ips',
+                                            to=settings.AUTH_USER_MODEL)),
             ],
         ),
     ]

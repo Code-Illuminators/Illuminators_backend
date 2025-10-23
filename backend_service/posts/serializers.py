@@ -1,3 +1,4 @@
+"""Module for defining serializers related to post management"""
 from rest_framework import serializers
 from .models import BigfootPost, UfoPost, GhostPost, OtherPost
 

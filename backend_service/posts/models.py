@@ -1,3 +1,4 @@
+"""Module for defining Django models related to posts management"""
 from django.db import models
 from django.conf import settings
 
