@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt.token_blacklist",
     'users',
     'posts',
+    'corsheaders',
 ]
 
 REST_FRAMEWORK = {
@@ -57,8 +58,11 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
-
+CORS_ALLOWED_ORIGINS = [
+    os.environ.get('CORS_ALLOWED_ORIGIN'),
+]
 ROOT_URLCONF = 'backend_service.urls'
 
 TEMPLATES = [
@@ -85,11 +89,11 @@ WSGI_APPLICATION = 'backend_service.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.getenv('MARIADB_DATABASE'),
-        'USER': os.getenv('MARIADB_USER'),
-        'PASSWORD': os.getenv('MARIADB_PASSWORD'),
-        'HOST': os.getenv('MARIADB_HOST'),
-        'PORT': os.getenv('MARIADB_PORT_NUMBER'),
+        'NAME': os.environ.get('MARIADB_DATABASE'),
+        'USER': os.environ.get('MARIADB_USER'),
+        'PASSWORD': os.environ.get('MARIADB_PASSWORD'),
+        'HOST': os.environ.get('MARIADB_HOST'),
+        'PORT': os.environ.get('MARIADB_PORT_NUMBER'),
     }
 }
 
