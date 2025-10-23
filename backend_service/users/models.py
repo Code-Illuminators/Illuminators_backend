@@ -13,6 +13,7 @@ class User(AbstractUser):
     role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='simple')
 
     def __str__(self):
+        """Return a string representation of the User model"""
         return f"{self.username} ({self.get_role_display()})"
 
 class Government(models.Model):
@@ -21,12 +22,15 @@ class Government(models.Model):
     added_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reported_ips')
 
     def set_ip(self, ip_address):
+        """Hash and store an IP address using SHA-256"""
         self.ip_hash = hashlib.sha256(ip_address.encode()).hexdigest()
 
     def check_ip(self, ip_address):
+        """Check if a provided IP address matches the stored hash"""
         return self.ip_hash == hashlib.sha256(ip_address.encode()).hexdigest()
 
     def __str__(self):
+        """Return a string representation of the Government model"""
         return f"IP reported by {self.added_by.username}"
 
 class EntryPassword(models.Model):
@@ -34,10 +38,13 @@ class EntryPassword(models.Model):
     password_hash = models.CharField(max_length=128, null=False)
 
     def set_password(self, raw_password):
+        """Hash and store a password using SHA-256"""
         self.password_hash = hashlib.sha256(raw_password.encode()).hexdigest()
 
     def check_password(self, raw_password):
+        """Return a string representation of the EntryPassword model"""
         return self.password_hash == hashlib.sha256(raw_password.encode()).hexdigest()
 
     def __str__(self):
+        """Return a string representation of the EntryPassword model"""
         return f"Entry password to get access to application"

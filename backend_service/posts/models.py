@@ -17,19 +17,23 @@ class BasePost(models.Model):
 class BigfootPost(BasePost):
     """Class representing a Bigfoot posts"""
     def __str__(self):
+        """Return a string representation of the BigfootPost model"""
         return f"Bigfoot sighting by {self.owner.username} at {self.location}"
 
 class UfoPost(BasePost):
     """Class representing a Ufo posts"""
     def __str__(self):
+        """Return a string representation of the UfoPost model"""
         return f"UFO sighting by {self.owner.username} at {self.location}"
 
 class GhostPost(BasePost):
     """Class representing a Ghost posts"""
     def __str__(self):
+        """Return a string representation of the GhostPost model"""
         return f"Ghost encounter by {self.owner.username} at {self.location}"
 
 class OtherPost(BasePost):
     """Class representing a Other posts"""
     def __str__(self):
+        """Return a string representation of the OtherPost model"""
         return f"Other report by {self.owner.username} at {self.location}"
