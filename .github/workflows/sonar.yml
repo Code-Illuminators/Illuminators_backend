@@ -11,6 +11,17 @@ jobs:
   sonarqube:
     name: SonarQube Cloud
     runs-on: ubuntu-latest
+    services:
+      db:
+        image: mariadb:11
+        env:
+          MARIADB_USER: ${{ secrets.DB_USER }}
+          MARIADB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          MARIADB_DATABASE: ${{ secrets.MARIADB_DATABASE }}
+          MARIADB_ROOT_PASSWORD: ${{ secrets.MARIADB_ROOT_PASSWORD }}
+        ports:
+          - 3306:3306
+
     steps:
       - uses: actions/checkout@v2
         with:
@@ -24,6 +35,10 @@ jobs:
       - name: Run tests with coverage
         env:
           DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
+          MARIADB_USER: ${{ secrets.DB_USER }}
+          MARIADB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          MARIADB_DATABASE: ${{ secrets.MARIADB_DATABASE }}
+          MARIADB_ROOT_PASSWORD: ${{ secrets.MARIADB_ROOT_PASSWORD }}
         working-directory: backend_service
         run: pytest --cov=. --cov-report=xml
       - name: SonarQube Scan
