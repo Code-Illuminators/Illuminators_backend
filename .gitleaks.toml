@@ -28,6 +28,6 @@ keywords = ["password", "pass", "secret", "pwd", "token"]
 [allowlist]
 description = "Ignore test data"
 paths = [
-    '''backend_service/posts/test/.*''',
-    '''backend_service/users/test/.*'''
+    '''backend_service/posts/tests/.*''',
+    '''backend_service/users/tests/.*'''
 ]
