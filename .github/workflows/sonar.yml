@@ -18,7 +18,7 @@ jobs:
           MARIADB_DATABASE: ${{ secrets.MARIADB_DATABASE }}
           MARIADB_ROOT_PASSWORD: ${{ secrets.MARIADB_ROOT_PASSWORD }}
         ports:
-          - "3306:3306"
+          - 3307:3306
         options: >-
           --health-cmd="healthcheck.sh --connect --innodb_initialized" 
           --health-interval=10s 
