@@ -15,13 +15,16 @@ jobs:
       db:
         image: mariadb:11
         env:
-          MARIADB_PORT_NUMBER: ${{ secrets.MARIADB_PORT_NUMBER }}
-          MARIADB_HOST: ${{ secrets.MARIADB_HOST}}
           MARIADB_DATABASE: ${{ secrets.MARIADB_DATABASE }}
           MARIADB_ROOT_PASSWORD: ${{ secrets.MARIADB_ROOT_PASSWORD }}
         ports:
-          - 3306:3306
-
+          - "3306:3306"
+        options: >-
+          --health-cmd "mysqladmin ping -ppass"
+          --health-interval 10s
+          --health-start-period 10s
+          --health-timeout 5s
+          --health-retries 10
     steps:
       - uses: actions/checkout@v2
         with:
