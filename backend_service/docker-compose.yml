@@ -6,8 +6,6 @@ services:
     restart: always
     env_file:
       - .env
-    environment:
-      ALLOW_EMPTY_PASSWORD: yes
     ports:
       - "${DB_EXTERNAL_PORT}:${MARIADB_PORT_NUMBER}"
     volumes:

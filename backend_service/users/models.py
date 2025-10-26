@@ -42,9 +42,9 @@ class EntryPassword(models.Model):
         self.password_hash = hashlib.sha256(raw_password.encode()).hexdigest()
 
     def check_password(self, raw_password):
-        """Return a string representation of the EntryPassword model"""
+        """Check if a provided password matches the stored hash"""
         return self.password_hash == hashlib.sha256(raw_password.encode()).hexdigest()
 
     def __str__(self):
         """Return a string representation of the EntryPassword model"""
-        return f"Entry password to get access to application"
+        return "Entry password to get access to application"
