@@ -18,7 +18,7 @@ jobs:
           MARIADB_DATABASE: ${{ secrets.MARIADB_DATABASE }}
           MARIADB_ROOT_PASSWORD: ${{ secrets.MARIADB_ROOT_PASSWORD }}
         ports:
-          - 3307:3306
+          - 3306:3306
         options: >-
           --health-cmd="healthcheck.sh --connect --innodb_initialized" 
           --health-interval=10s 
@@ -34,6 +34,11 @@ jobs:
           python-version: "3.10"
       - name: Install dependencies
         run: pip install -r requirements.txt
+      - name: Wait for MariaDB
+        run: |
+          until mysql -h db -u root -p"$MARIADB_ROOT_PASSWORD" -e "SELECT 1"; do
+          sleep 3
+          done
       - name: Run migrations
         working-directory: backend_service
         env:
