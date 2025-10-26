@@ -45,7 +45,7 @@ jobs:
           MARIADB_USER: ${{ secrets.MARIADB_USER }}
           MARIADB_HOST: ${{ secrets.MARIADB_HOST}}
           MARIADB_PORT_NUMBER: ${{ secrets.MARIADB_PORT_NUMBER }}
-          CORS_ALLOWED_ORIGINS: ${{ secrets.CORS_ALLOWED_ORIGINS }}
+          CORS_ALLOWED_ORIGIN: ${{ secrets.CORS_ALLOWED_ORIGIN }}
         run: python manage.py migrate
       - name: Run tests with coverage
         env:
@@ -55,7 +55,7 @@ jobs:
           MARIADB_USER: ${{ secrets.MARIADB_USER }}
           MARIADB_HOST: ${{ secrets.MARIADB_HOST}}
           MARIADB_PORT_NUMBER: ${{ secrets.MARIADB_PORT_NUMBER }}
-          CORS_ALLOWED_ORIGINS: ${{ secrets.CORS_ALLOWED_ORIGINS }}
+          CORS_ALLOWED_ORIGIN: ${{ secrets.CORS_ALLOWED_ORIGIN }}
         working-directory: backend_service
         run: pytest --cov=. --cov-report=xml
       - name: SonarQube Scan
