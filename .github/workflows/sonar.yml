@@ -40,7 +40,7 @@ jobs:
           DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
           MARIADB_DATABASE: ${{ secrets.MARIADB_DATABASE }}
           MARIADB_ROOT_PASSWORD: ${{ secrets.MARIADB_ROOT_PASSWORD }}
-          MARIADB_HOST: ${{ secrets.MARIADB_HOST}}
+          MARIADB_HOST: db
           MARIADB_PORT_NUMBER: ${{ secrets.MARIADB_PORT_NUMBER }}
         run: python manage.py migrate
       - name: Run tests with coverage
@@ -48,7 +48,7 @@ jobs:
           DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
           MARIADB_DATABASE: ${{ secrets.MARIADB_DATABASE }}
           MARIADB_ROOT_PASSWORD: ${{ secrets.MARIADB_ROOT_PASSWORD }}
-          MARIADB_HOST: ${{ secrets.MARIADB_HOST}}
+          MARIADB_HOST: db
           MARIADB_PORT_NUMBER: ${{ secrets.MARIADB_PORT_NUMBER }}
         working-directory: backend_service
         run: pytest --cov=. --cov-report=xml
