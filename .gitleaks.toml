@@ -1,4 +1,4 @@
-title = "Gitleaks configuration for Bird Project"
+title = "Gitleaks configuration for Illuminati Project"
 
 
 
@@ -23,3 +23,11 @@ description = "Detects password credentials"
 regex = '''(?i)(password|pass|secret|pwd|token)\s*[:=]\s*['"`]([a-zA-Z0-9!@#$%^&*()_+=\-[\]{}|;:'",.<>/?~]{8,})['"`]'''
 tags = ["secret", "password", "credential"]
 keywords = ["password", "pass", "secret", "pwd", "token"]
+
+
+[allowlist]
+description = "Ignore test data"
+paths = [
+    '''backend_service/posts/test/.*''',
+    '''backend_service/users/test/.*'''
+]
