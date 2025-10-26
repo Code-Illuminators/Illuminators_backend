@@ -34,6 +34,15 @@ jobs:
           python-version: "3.10"
       - name: Install dependencies
         run: pip install -r requirements.txt
+      - name: Run migrations
+        working-directory: backend_service
+        env:
+          DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
+          MARIADB_DATABASE: ${{ secrets.MARIADB_DATABASE }}
+          MARIADB_ROOT_PASSWORD: ${{ secrets.MARIADB_ROOT_PASSWORD }}
+          MARIADB_HOST: ${{ secrets.MARIADB_HOST}}
+          MARIADB_PORT_NUMBER: ${{ secrets.MARIADB_PORT_NUMBER }}
+        run: python manage.py migrate
       - name: Run tests with coverage
         env:
           DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
