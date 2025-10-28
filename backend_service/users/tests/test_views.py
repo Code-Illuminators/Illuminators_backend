@@ -1,5 +1,6 @@
 import pytest
 import logging
+from django.conf import settings
 
 logger = logging.getLogger(__name__)
 
@@ -39,7 +40,7 @@ def test_login_user_invalid_credentials(api_client, user) -> None:
         "password":"wrongpassword"
         }, format="json")
     logger.info(f"{response.data}")
-    assert response.status_code == 401
+    assert response.status_code == 400
 
 @pytest.mark.django_db
 def test_logout_user(api_client, user) -> None:
@@ -79,33 +80,39 @@ def test_users_list_unauthenticated(api_client) -> None:
 
 @pytest.mark.django_db
 def test_get_active_password(api_client, entry_password) -> None:
-    response = api_client.get('/api/auth/entry-password/active/')
+    headers = {"X-Internal-Token": settings.INTERNAL_SERVICE_TOKEN}
+    response = api_client.get('/api/auth/entry-password/active/', headers=headers)
     logger.info(f"{response.data}")
     assert response.status_code == 200
     assert response.data['exists'] is True
 
 @pytest.mark.django_db
-def test_get_active_password_no_password(api_client) -> None:
-    response = api_client.get('/api/auth/entry-password/active/')
+def test_get_active_password_no_password(api_client, user) -> None:
+    headers = {"X-Internal-Token": settings.INTERNAL_SERVICE_TOKEN}
+    api_client.force_authenticate(user=user)
+    response = api_client.get('/api/auth/entry-password/active/', headers=headers)
     logger.info(f"{response.data}")
     assert response.status_code == 400
     assert response.data['exists'] is False
 
 @pytest.mark.django_db
 def test_delete_entry_password(api_client, entry_password) -> None:
-    response = api_client.delete(f'/api/auth/entry-password/delete/{entry_password.id}/')
+    headers = {"X-Internal-Token": settings.INTERNAL_SERVICE_TOKEN}
+    response = api_client.delete(f'/api/auth/entry-password/delete/{entry_password.id}/', headers=headers)
     logger.info(f"{response.data}")
     assert response.status_code == 200
 
 @pytest.mark.django_db
 def test_delete_entry_password_not_found(api_client) -> None:
-    response = api_client.delete('/api/auth/entry-password/delete/9999/')
+    headers = {"X-Internal-Token": settings.INTERNAL_SERVICE_TOKEN}
+    response = api_client.delete('/api/auth/entry-password/delete/9999/', headers=headers)
     logger.info(f"{response.data}")
     assert response.status_code == 404
 
 @pytest.mark.django_db
 def test_set_entry_password(api_client) -> None:
-    response = api_client.post('/api/auth/entry-password/set/', data={
+    headers = {"X-Internal-Token": settings.INTERNAL_SERVICE_TOKEN}
+    response = api_client.post('/api/auth/entry-password/set/', headers=headers, data={
         "password": "new_entry_password"
         }, format="json")
     logger.info(f"{response.data}")
