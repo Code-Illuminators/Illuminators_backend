@@ -52,7 +52,9 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
 ]
 CORS_ALLOWED_ORIGINS = [
-    os.environ.get('CORS_ALLOWED_ORIGIN'),
+    origin.strip()
+    for origin in os.environ.get('CORS_ALLOWED_ORIGIN', '').split(',')
+    if origin.strip()
 ]
 
 INTERNAL_SERVICE_TOKEN = os.environ.get('INTERNAL_SERVICE_TOKEN')
