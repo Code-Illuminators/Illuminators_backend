@@ -54,6 +54,9 @@ MIDDLEWARE = [
 CORS_ALLOWED_ORIGINS = [
     os.environ.get('CORS_ALLOWED_ORIGIN'),
 ]
+
+INTERNAL_SERVICE_TOKEN = os.environ.get('INTERNAL_SERVICE_TOKEN')
+
 ROOT_URLCONF = 'backend_service.urls'
 
 TEMPLATES = [

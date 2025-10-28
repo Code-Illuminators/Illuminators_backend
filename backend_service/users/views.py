@@ -7,7 +7,7 @@ from django.contrib.auth.hashers import make_password
 from .serializers import UserSerializer, UserUpdateSerializer, GovernmentSerializer
 from .serializers import EntryPasswordCheckSerializer, EntryPasswordSerializer
 from .models import EntryPassword
-
+from .permissions import InternalServiceAccess
 User = get_user_model()
 
 @api_view(['POST'])
@@ -19,6 +19,7 @@ def check_entry_password(request):
     return Response({'valid': False, 'message': 'Invalid password!'}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
+@permission_classes([InternalServiceAccess])
 def set_entry_password(request):
     """Set a new entry password"""
     serializer = EntryPasswordSerializer(data=request.data)
@@ -28,6 +29,7 @@ def set_entry_password(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['DELETE'])
+@permission_classes([InternalServiceAccess])
 def delete_entry_password(request, password_id):
     """Delete an entry password by its ID"""
     try:
@@ -38,6 +40,7 @@ def delete_entry_password(request, password_id):
         return Response({'error': 'This password is not here!'}, status=status.HTTP_404_NOT_FOUND)
 
 @api_view(['GET'])
+@permission_classes([InternalServiceAccess])
 def get_active_password(request):
     """Retrieve the ID of the most recently set entry password"""
     entry_password = EntryPassword.objects.last()
@@ -55,7 +58,7 @@ def register_user(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated | InternalServiceAccess])
 def users_list(request):
     """Retrieve a list of all users"""
     users = User.objects.all()
