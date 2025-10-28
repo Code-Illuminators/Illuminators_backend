@@ -1,10 +1,12 @@
 """Module for defining serializers related to user management and IP/password handling"""
-import re
 import ipaddress
+import hashlib
+from rest_framework_simplejwt.tokens import RefreshToken
+from django.contrib.auth import authenticate
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import make_password
-from .models import Government, EntryPassword
+from .models import Government, EntryPassword, UserLoginIP
 
 User = get_user_model()
 
@@ -13,7 +15,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         """Metadata for UserSerializer."""
         model = User
-        fields = ['id', 'username', 'email', 'password', 'role']
+        fields = ['id', 'username', 'email', 'password', 'role', 'force_password_change']
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
@@ -88,3 +90,29 @@ class GovernmentSerializer(serializers.ModelSerializer):
         government_ip.set_ip(ip_address)
         government_ip.save()
         return government_ip
+
+class LoginSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    password = serializers.CharField(write_only=True)
+    def validate(self, data):
+        username = data.get('username')
+        password = data.get('password')
+        request = self.context['request']
+        ip_address = request.META.get('REMOTE_ADDR')
+        if not ip_address:
+            raise serializers.ValidationError("Could not determine IP address.")
+        ip_hash = hashlib.sha256(ip_address.encode()).hexdigest()
+        if Government.objects.filter(ip_hash=ip_hash).exists():
+            raise serializers.ValidationError("Access from this IP is restricted.")
+        user = authenticate(username=username, password=password)
+        if not user:
+            raise serializers.ValidationError("Invalid username or password.")
+        if not UserLoginIP.objects.filter(user=user, ip_hash=ip_hash).exists():
+            UserLoginIP.objects.create(user=user, ip_hash=ip_hash)
+        refresh = RefreshToken.for_user(user)
+
+        data['user'] = user
+        data['refresh'] = str(refresh)
+        data['access'] = str(refresh.access_token)
+
+        return data

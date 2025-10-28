@@ -5,7 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import make_password
 from .serializers import UserSerializer, UserUpdateSerializer, GovernmentSerializer
-from .serializers import EntryPasswordCheckSerializer, EntryPasswordSerializer
+from .serializers import EntryPasswordCheckSerializer, EntryPasswordSerializer, LoginSerializer
 from .models import EntryPassword
 from .permissions import InternalServiceAccess
 User = get_user_model()
@@ -98,3 +98,20 @@ def report_government_ip(request):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+@api_view(['POST'])
+def login_user(request):
+    """Authenticate a user and return a token"""
+    serializer = LoginSerializer(data=request.data, context={'request': request})
+    if serializer.is_valid():
+        return Response({
+            'refresh': serializer.validated_data['refresh'],
+            'access': serializer.validated_data['access'],
+            'user': {
+                'id': serializer.validated_data['user'].id,
+                'username': serializer.validated_data['user'].username,
+                'email': serializer.validated_data['user'].email,
+                'role': serializer.validated_data['user'].role,
+                'force_password_change': serializer.validated_data['user'].force_password_change,
+            }
+        }, status=status.HTTP_200_OK)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
