@@ -4,4 +4,3 @@ photo_storage/
 debug.log
 .env
 env/
-.gitignore
