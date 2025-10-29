@@ -31,7 +31,7 @@ services:
     environment:
       INTERNAL_SERVICE_TOKEN: "${INTERNAL_SERVICE_TOKEN}"
     depends_on:
-      - backend    
+      - backend
 
 volumes:
   mariadb_data:
