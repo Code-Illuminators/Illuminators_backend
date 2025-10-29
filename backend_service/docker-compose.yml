@@ -1,0 +1,28 @@
+version: "3.9"
+
+services:
+  db:
+    image: mariadb:11
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - "${DB_EXTERNAL_PORT}:${MARIADB_PORT_NUMBER}"
+    volumes:
+      - mariadb_data:/var/lib/mysql
+
+  backend:
+    image: illuminati-backend:latest
+    restart: always
+    command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:${BACKEND_PORT}"
+    volumes:
+      - .:/backend
+      - ./photo_storage:/backend/photo_storage
+    ports:
+      - "${BACKEND_EXTERNAL_PORT}:${BACKEND_PORT}"
+    depends_on:
+      - db
+    env_file:
+      - .env
+volumes:
+  mariadb_data:

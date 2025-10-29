@@ -11,10 +11,54 @@ jobs:
   sonarqube:
     name: SonarQube Cloud
     runs-on: ubuntu-latest
+    services:
+      db:
+        image: mariadb:11
+        env:
+          MARIADB_DATABASE: ${{ secrets.MARIADB_DATABASE }}
+          MARIADB_ROOT_PASSWORD: ${{ secrets.MARIADB_ROOT_PASSWORD }}
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mariadb-admin ping --protocol=tcp" 
+          --health-interval=10s 
+          --health-timeout=5s 
+          --health-retries=3
     steps:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.10"
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Wait for mariadb
+        run: while ! nc -z localhost 3306; do sleep 1; done
+      - name: Run migrations
+        working-directory: backend_service
+        env:
+          DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
+          MARIADB_DATABASE: ${{ secrets.MARIADB_DATABASE }}
+          MARIADB_ROOT_PASSWORD: ${{ secrets.MARIADB_ROOT_PASSWORD }}
+          MARIADB_USER: ${{ secrets.MARIADB_USER }}
+          MARIADB_HOST: ${{ secrets.MARIADB_HOST}}
+          MARIADB_PORT_NUMBER: ${{ secrets.MARIADB_PORT_NUMBER }}
+          CORS_ALLOWED_ORIGIN: ${{ secrets.CORS_ALLOWED_ORIGIN }}
+        run: python manage.py migrate
+      - name: Run tests with coverage
+        env:
+          DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
+          MARIADB_DATABASE: ${{ secrets.MARIADB_DATABASE }}
+          MARIADB_ROOT_PASSWORD: ${{ secrets.MARIADB_ROOT_PASSWORD }}
+          MARIADB_USER: ${{ secrets.MARIADB_USER }}
+          MARIADB_HOST: ${{ secrets.MARIADB_HOST}}
+          MARIADB_PORT_NUMBER: ${{ secrets.MARIADB_PORT_NUMBER }}
+          CORS_ALLOWED_ORIGIN: ${{ secrets.CORS_ALLOWED_ORIGIN }}
+          INTERNAL_SERVICE_TOKEN: ${{ secrets.INTERNAL_SERVICE_TOKEN }}
+        working-directory: backend_service
+        run: pytest --cov=. --cov-report=xml
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v6
         env:
