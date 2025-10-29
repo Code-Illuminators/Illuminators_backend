@@ -92,14 +92,19 @@ class GovernmentSerializer(serializers.ModelSerializer):
         return government_ip
 
 class LoginSerializer(serializers.Serializer):
+    """Serializer for user login and IP logging."""
     username = serializers.CharField()
     password = serializers.CharField(write_only=True)
     def validate(self, data):
+        """Validate user credentials and write the login IP."""
         username = data.get('username')
         password = data.get('password')
         request = self.context['request']
         ip_address = request.META.get('REMOTE_ADDR')
-        if not ip_address:
+        try:
+            if not ip_address:
+                raise ValueError
+        except ValueError:
             raise serializers.ValidationError("Could not determine IP address.")
         ip_hash = hashlib.sha256(ip_address.encode()).hexdigest()
         if Government.objects.filter(ip_hash=ip_hash).exists():
