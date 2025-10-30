@@ -9,7 +9,7 @@ class BasePostSerializer(serializers.ModelSerializer):
 
     class Meta:
         """Metadata for BasePostSerializer."""
-        fields = ['id', 'owner', 'location', 'image', 'created_at']
+        fields = ['id', 'owner', 'location', 'image', 'lat', 'lng', 'created_at']
 
 class BigfootPostSerializer(BasePostSerializer):
     """Serializer for Bigfoot posts."""

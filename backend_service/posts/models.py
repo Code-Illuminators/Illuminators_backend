@@ -7,6 +7,8 @@ class BasePost(models.Model):
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
                             related_name="%(app_label)s_%(class)s_posts")
     location = models.CharField(max_length=255)
+    lat = models.FloatField(null=True, blank=True)
+    lng = models.FloatField(null=True, blank=True)
     image = models.ImageField(upload_to='photo_storage/')
     created_at = models.DateTimeField(auto_now_add=True)
 
