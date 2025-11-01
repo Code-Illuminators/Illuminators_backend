@@ -5,4 +5,5 @@ urlpatterns = [
     path('votes/create/', views.create_vote, name='create-vote'),
     path('votes/active/', views.votes_list, name='votes-list'),
     path('votes/<int:pk>/vote/', views.collect_vote, name='collect-vote'),
+    path('votes/<int:pk>/delete/', views.delete_vote, name='delete-vote'),
 ]

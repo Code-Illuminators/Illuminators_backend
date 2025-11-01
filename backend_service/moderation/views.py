@@ -18,28 +18,7 @@ def create_vote(request):
     serializer = VoteSerializer(data=request.data)
     if serializer.is_valid():
         vote = serializer.save()
-        try:
-            response=requests.post("http://go-voting:8080/voting/start", json=VoteSerializer(vote).data)
-            if response.status_code == 200:
-                if response.json().get("status") == "ok":
-                    return Response({"message": "External service notified successfully",}, 
-                                    VoteSerializer(vote).data, status=status.HTTP_201_CREATED)
-                else:
-                    return Response({"message": "External service have a problem. Responded with unexpected dats",}, 
-                                    VoteSerializer(vote).data, status=status.HTTP_202_ACCEPTED)
-            else:
-                return Response({"message": "External service returned error",
-                                "status_code": response.status_code,}, 
-                                    VoteSerializer(vote).data, status=status.HTTP_202_ACCEPTED)
-        except requests.RequestException as e:
-            return Response(
-                {
-                    "message": "Vote created, but failed to contact external service",
-                    "error": str(e),
-                },
-                VoteSerializer(vote).data,
-                status=status.HTTP_202_ACCEPTED,
-            )
+        return Response(VoteSerializer(vote).data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])
@@ -84,6 +63,17 @@ def collect_vote(request, pk):
         'against_amount': vote.against_amount,
         'progress': round(vote.progress, 1)
     }, status=status.HTTP_200_OK)
+
+@api_view(['DELETE'])
+def delete_vote(request, pk):
+    """Delete voice and all related information"""
+    try:
+        vote = Vote.objects.get(pk=pk)
+    except Vote.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    vote.delete()
+    return Response({"message": "Vote and all logs deleted successfully"},
+        status=status.HTTP_204_NO_CONTENT)
 
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
