@@ -34,7 +34,7 @@ class UserLoginIP(models.Model):
 class Government(models.Model):
     """Class for storing hashed IP addresses reported by users."""
     ip_hash = models.CharField(max_length=64, unique=True, null=False)
-    added_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reported_ips')
+    added_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reported_ips', null=True, blank=True)
 
     def set_ip(self, ip_address):
         """Hash and store an IP address using SHA-256"""
