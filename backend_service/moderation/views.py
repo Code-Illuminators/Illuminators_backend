@@ -18,7 +18,27 @@ def create_vote(request):
     serializer = VoteSerializer(data=request.data)
     if serializer.is_valid():
         vote = serializer.save()
-        return Response(VoteSerializer(vote).data, status=status.HTTP_201_CREATED)
+        try:
+            response=requests.post("http://go-voting:8080/voting/start", json=VoteSerializer(vote).data)
+            if response.status_code == 200:
+                if response.json().get("status") == "ok":
+                    return Response({"message": "External service notified successfully",}, 
+                                    VoteSerializer(vote).data, status=status.HTTP_201_CREATED)
+                else:
+                    return Response({"message": "External service have a problem. Responded with unexpected dats",}, 
+                                    VoteSerializer(vote).data, status=status.HTTP_202_ACCEPTED)
+            else:
+                return Response({"message": "External service returned error",
+                                "status_code": response.status_code,}, 
+                                    VoteSerializer(vote).data, status=status.HTTP_202_ACCEPTED)
+        except requests.RequestException as e:
+            return Response(
+                {
+                    "message": "Vote created, but failed to contact external service",
+                },
+                VoteSerializer(vote).data,
+                status=status.HTTP_202_ACCEPTED,
+            )
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])
