@@ -15,4 +15,5 @@ urlpatterns = [
     path('entry-password/set/', views.set_entry_password, name='set_password'),
     path('entry-password/delete/<int:password_id>/', views.delete_entry_password, name='delete_password'),
     path('entry-password/active/', views.get_active_password, name='active_password'),
+    path('reset-password/', views.reset_password, name='reset-password')
 ]

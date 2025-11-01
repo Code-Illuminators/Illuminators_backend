@@ -109,6 +109,15 @@ class LoginSerializer(serializers.Serializer):
         ip_hash = hashlib.sha256(ip_address.encode()).hexdigest()
         if Government.objects.filter(ip_hash=ip_hash).exists():
             raise serializers.ValidationError("Access from this IP is restricted.")
+        try:
+            user = User.objects.get(username=username)
+        except User.DoesNotExist:
+            raise serializers.ValidationError("Invalid username")
+        if user.force_password_change:
+            data['user'] = user
+            data['refresh'] = None
+            data['access'] = None
+            return data
         user = authenticate(username=username, password=password)
         if not user:
             raise serializers.ValidationError("Invalid username or password.")
