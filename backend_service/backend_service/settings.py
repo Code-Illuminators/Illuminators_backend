@@ -109,3 +109,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'users.User'
 MEDIA_URL = '/photo_storage/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'photo_storage')
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "backend", "go-sender", "frontend"]

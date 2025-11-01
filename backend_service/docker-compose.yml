@@ -24,5 +24,27 @@ services:
       - db
     env_file:
       - .env
+
+  go-sender:
+    image: go-sender
+    env_file: ../../Illuminators_service/sender/.env
+    environment:
+      INTERNAL_SERVICE_TOKEN: "${INTERNAL_SERVICE_TOKEN}"
+    depends_on:
+      - backend
+  go-voting:
+    image: go-voting
+    env_file: ../../Illuminators_service/voting/.env
+    environment:
+      INTERNAL_SERVICE_TOKEN: "${INTERNAL_SERVICE_TOKEN}"
+    depends_on:
+      - backend
+
+  frontend:
+    image: frontend:latest
+    container_name: frontend
+    ports:
+      - "8080:80"
+
 volumes:
   mariadb_data:
