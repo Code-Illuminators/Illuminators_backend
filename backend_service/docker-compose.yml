@@ -32,6 +32,13 @@ services:
       INTERNAL_SERVICE_TOKEN: "${INTERNAL_SERVICE_TOKEN}"
     depends_on:
       - backend
+  go-voting:
+    image: go-voting
+    env_file: ../../Illuminators_service/voting/.env
+    environment:
+      INTERNAL_SERVICE_TOKEN: "${INTERNAL_SERVICE_TOKEN}"
+    depends_on:
+      - backend
 
   frontend:
     image: frontend:latest
