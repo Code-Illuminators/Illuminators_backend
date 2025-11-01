@@ -97,7 +97,7 @@ def delete_vote(request, pk):
 
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
-def delete_all_data_and_reset_passwords(request):
+def delete_all(request):
     """Delete all posts, reset users' password, and entry passwords."""
     if request.user.role != 'gold':
         return Response({'error': 'Not authorized'}, status=status.HTTP_403_FORBIDDEN)
@@ -118,7 +118,7 @@ def delete_all_data_and_reset_passwords(request):
     return Response({'success': 'All data deleted and passwords reset'}, status=status.HTTP_200_OK)
 
 @api_view(['DELETE'])
-def delete_user_account_and_send_ip_to_goverment(request, username):
+def delete_user_account(request, username):
     """Delete a user account and report IP to government."""
     try:
         user_to_delete = User.objects.get(username=username)
