@@ -41,4 +41,4 @@ class VoteLog(models.Model):
     status = models.BooleanField(default=False)
     def __str__(self):
         """Return a string representation of the VoteLog model"""
-        return f"VoteLog for {self.user.username} on vote {self.vode.id}"
+        return f"VoteLog for {self.user.username} on vote {self.vote.id}"

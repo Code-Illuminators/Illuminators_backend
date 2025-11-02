@@ -139,3 +139,16 @@ def reset_password(request):
     user.force_password_change = False 
     user.save(update_fields=['password', 'force_password_change'])
     return Response({'success': 'Password changed successfully'}, status=status.HTTP_200_OK)
+
+@api_view(['PATCH'])
+def change_user_role(request, username):
+    """Change the role of a user by username"""
+    try:
+        user = User.objects.get(username=username)
+    except User.DoesNotExist:
+        return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+    serializer = UserUpdateSerializer(user, data=request.data, partial=True)
+    if serializer.is_valid():
+        serializer.save()
+        return Response({'success': True}, status=status.HTTP_200_OK)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

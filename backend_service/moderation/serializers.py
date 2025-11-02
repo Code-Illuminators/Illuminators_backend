@@ -49,13 +49,13 @@ class VoteSerializer(serializers.ModelSerializer):
 
 class VoteLogSerializer(serializers.ModelSerializer):
     """Serializer for VoteLog model."""
-    vode_id = serializers.ReadOnlyField(source='vode.id')
+    vote_id = serializers.ReadOnlyField(source='vote.id')
     user = serializers.ReadOnlyField(source='user.username')
 
     class Meta:
         """Metadata for VoteLogSerializer."""
         model = VoteLog
-        fields = ['id', 'vode', 'user', 'is_for', 'is_against', 'status']
+        fields = ['id', 'vote', 'user', 'is_for', 'is_against', 'status']
     def create(self, validated_data):
         """Create a VoteLog instance."""
         return VoteLog.objects.create(**validated_data)
