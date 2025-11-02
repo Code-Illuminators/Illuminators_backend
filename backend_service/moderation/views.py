@@ -21,12 +21,8 @@ def create_vote(request):
         try:
             response=requests.post("http://go-voting:8080/voting/start", json=VoteSerializer(vote).data)
             if response.status_code == 200:
-                if response.json().get("status") == "ok":
-                    return Response({"message": "External service notified successfully",}, 
+                return Response({"message": "External service notified successfully",}, 
                                     VoteSerializer(vote).data, status=status.HTTP_201_CREATED)
-                else:
-                    return Response({"message": "External service have a problem. Responded with unexpected dats",}, 
-                                    VoteSerializer(vote).data, status=status.HTTP_202_ACCEPTED)
             else:
                 return Response({"message": "External service returned error",
                                 "status_code": response.status_code,}, 
@@ -76,13 +72,37 @@ def collect_vote(request, pk):
     vote_log.save()
     vote.save()
     vote.update_progress()
-    return Response({
-        'success': True,
-        'vote_id': vote.id,
-        'for_amount': vote.for_amount,
-        'against_amount': vote.against_amount,
-        'progress': round(vote.progress, 1)
-    }, status=status.HTTP_200_OK)
+    try:
+        response=requests.post("http://go-voting:8080/voting/processing", json=VoteSerializer(vote).data)
+        if response.status_code == 200:
+            return Response({"message": "External service notified successfully",
+                            'success': True,
+                            'vote_id': vote.id,
+                            'for_amount': vote.for_amount,
+                            'against_amount': vote.against_amount,
+                            'progress': round(vote.progress, 1),}, 
+                            status=status.HTTP_200_OK)
+        else:
+            return Response({"message": "External service returned error",
+                            "status_code": response.status_code,
+                            'success': True,
+                            'vote_id': vote.id,
+                            'for_amount': vote.for_amount,
+                            'against_amount': vote.against_amount,
+                            'progress': round(vote.progress, 1),},
+                            status=status.HTTP_202_ACCEPTED)
+    except requests.RequestException as e:
+        return Response(
+            {
+                "message": "Vote updated, but failed to contact external service",
+                'success': True,
+                'vote_id': vote.id,
+                'for_amount': vote.for_amount,
+                'against_amount': vote.against_amount,
+                'progress': round(vote.progress, 1),
+            },
+            status=status.HTTP_202_ACCEPTED,
+        )
 
 @api_view(['DELETE'])
 def delete_vote(request, pk):

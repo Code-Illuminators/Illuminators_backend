@@ -9,8 +9,10 @@ class User(AbstractUser):
         ('simple', 'Simple'),
         ('silver', 'Silver'),
         ('gold', 'Gold'),
+        ('architect', 'Architect'),
+        ('inquisition', 'Inquisition')
     ]
-    role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='simple')
+    role = models.CharField(max_length=15, choices=ROLE_CHOICES, default='simple')
     force_password_change = models.BooleanField(default=False)
     def __str__(self):
         """Return a string representation of the User model"""

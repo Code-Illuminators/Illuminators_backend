@@ -6,9 +6,17 @@ class Vote(models.Model):
         ('simple', 'Simple'),
         ('silver', 'Silver'),
         ('gold', 'Gold'),
+        ('architect', 'Architect'),
+        ('inquisition', 'Inquisition')
+    ]
+    VOTE_TYPE = [
+        ('promotion', 'Promotion'),
+        ('excommunication', 'Excommunication'),
     ]
     nominated_user = models.ForeignKey('users.User', on_delete=models.CASCADE, related_name='nominated_votes')
+    vote_type = models.CharField(max_length=20, choices=VOTE_TYPE)
     roles_allowed_vote = models.JSONField(default=list)
+    promotion_role = models.CharField(max_length=20, choices=ROLE_ACCESS, null=True, blank=True)
     for_amount = models.IntegerField(default=0)
     against_amount = models.IntegerField(default=0)
     progress = models.FloatField(default=0.0)
