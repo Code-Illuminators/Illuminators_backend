@@ -1,5 +1,6 @@
 """Configuring the handler for requests."""
 import requests
+from django.conf import settings
 from posts.models import BigfootPost, UfoPost, GhostPost, OtherPost
 from users.models import EntryPassword, User, Government, UserLoginIP
 from rest_framework.decorators import api_view, permission_classes
@@ -19,7 +20,7 @@ def create_vote(request):
     if serializer.is_valid():
         vote = serializer.save()
         try:
-            response=requests.post("http://go-voting:8080/voting/start", json=VoteSerializer(vote).data)
+            response=requests.post(f"{settings.VOTING_SERVICE_URL}/voting/start", json=VoteSerializer(vote).data)
             if response.status_code == 200:
                 return Response({"message": "External service notified successfully",
                                     "vote": VoteSerializer(vote).data}, 
@@ -72,7 +73,7 @@ def collect_vote(request, pk):
     vote.save()
     vote.update_progress()
     try:
-        response=requests.post("http://go-voting:8080/voting/processing", json=VoteSerializer(vote).data)
+        response=requests.post(f"{settings.VOTING_SERVICE_URL}/voting/processing", json=VoteSerializer(vote).data)
         if response.status_code == 200:
             return Response({"message": "External service notified successfully",
                             'success': True,

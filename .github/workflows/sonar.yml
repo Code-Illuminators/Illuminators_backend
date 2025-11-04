@@ -57,6 +57,7 @@ jobs:
           MARIADB_PORT_NUMBER: ${{ secrets.MARIADB_PORT_NUMBER }}
           CORS_ALLOWED_ORIGIN: ${{ secrets.CORS_ALLOWED_ORIGIN }}
           INTERNAL_SERVICE_TOKEN: ${{ secrets.INTERNAL_SERVICE_TOKEN }}
+          VOTING_SERVICE_URL: ${{secrets.VOTING_SERVICE_URL}}
         working-directory: backend_service
         run: pytest --cov=. --cov-report=xml
       - name: SonarQube Scan
