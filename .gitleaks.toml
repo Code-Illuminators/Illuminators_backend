@@ -29,5 +29,6 @@ keywords = ["password", "pass", "secret", "pwd", "token"]
 description = "Ignore test data"
 paths = [
     '''backend_service/posts/tests/.*''',
-    '''backend_service/users/tests/.*'''
+    '''backend_service/users/tests/.*''',
+    '''backend_service/moderation/tests/.*''',
 ]
