@@ -9,12 +9,12 @@ class Vote(models.Model):
         ('architect', 'Architect'),
         ('inquisition', 'Inquisition')
     ]
-    VOTE_TYPE = [
+    VOTE_ACTIONS = [
         ('promotion', 'Promotion'),
         ('excommunication', 'Excommunication'),
     ]
     nominated_user = models.ForeignKey('users.User', on_delete=models.CASCADE, related_name='nominated_votes')
-    vote_type = models.CharField(max_length=20, choices=VOTE_TYPE)
+    vote_type = models.CharField(max_length=20, choices=VOTE_ACTIONS)
     roles_allowed_vote = models.JSONField(default=list)
     promotion_role = models.CharField(max_length=20, choices=ROLE_ACCESS, null=True, blank=True)
     for_amount = models.IntegerField(default=0)

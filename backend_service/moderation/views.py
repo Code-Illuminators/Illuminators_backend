@@ -31,7 +31,7 @@ def create_vote(request):
                                     "vote": VoteSerializer(vote).data}, 
                                     status=status.HTTP_202_ACCEPTED)
         except requests.RequestException as e:
-            return Response({"message": "Vote created, but failed to contact external service",
+            return Response({"message": f"Vote created, but failed to contact external service: {e}",
                                 "vote": VoteSerializer(vote).data},
                                 status=status.HTTP_202_ACCEPTED,
             )
@@ -94,7 +94,7 @@ def collect_vote(request, pk):
     except requests.RequestException as e:
         return Response(
             {
-                "message": "Vote updated, but failed to contact external service",
+                "message": f"Vote updated, but failed to contact external service: {e}",
                 'success': True,
                 'vote_id': vote.id,
                 'for_amount': vote.for_amount,

@@ -1,4 +1,5 @@
 import pytest
+import math
 from moderation.models import Vote, VoteLog
 from users.models import User
 
@@ -11,7 +12,8 @@ def test_vote_creation(vote_create, user):
     assert vote.roles_allowed_vote == ["simple"]
     assert vote.for_amount == 0
     assert vote.against_amount == 0
-    assert vote.progress == 0.0
+    assert math.isclose(vote.progress, 0.0, rel_tol=1e-9)
+
     assert str(vote) == f"Vote for {user.username} — For: 0, Against: 0"
 
 @pytest.mark.django_db
@@ -41,4 +43,4 @@ def test_vote_update_progress(user):
     VoteLog.objects.create(vote=vote, user=user2, status=False)
 
     vote.update_progress()
-    assert vote.progress == 50.0
+    assert math.isclose(vote.progress, 50.0, rel_tol=1e-9)

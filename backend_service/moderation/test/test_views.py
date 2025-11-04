@@ -73,7 +73,7 @@ def test_collect_vote_invalid(api_client, user, vote_create):
 def test_collect_vote_invalid_pk(api_client, user, vote_create):
     """Test of collecting voting results for a non-existent vote"""
     api_client.force_authenticate(user=user)
-    response = api_client.post(f"/api/moderation/votes/9999/vote/",
+    response = api_client.post("/api/moderation/votes/9999/vote/",
         {"choice": "for"},
         format="json",
     )
