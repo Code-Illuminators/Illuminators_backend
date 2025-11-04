@@ -1,0 +1,48 @@
+pipeline {
+    agent any
+
+    triggers {
+        pollSCM('H/5 * * * *')
+    }
+
+    environment {
+        DOCKER_IMAGE_TAG = "django_image_${env.BUILD_NUMBER}"
+        ECR_LINK   = credentials('ecr_link_credential')
+        AWS_REGION = credentials('aws_region_credential')
+    }
+
+    stages {
+
+        stage('Checkout repository') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Build Docker image') {
+            steps {
+                dir('backend_service/backend_service') {
+                    script {
+                        backend_app = docker.build("illuminators_backend_ecr")
+                    }
+                }
+            }
+        }
+
+        stage('Push Docker image') {
+            steps {
+                dir('backend_service/backend_service') {
+                    script {
+                        docker.withRegistry(
+                            "${env.ECR_LINK}",
+                            "ecr:${env.AWS_REGION}:aws_credentials"
+                        ) {
+                            backend_app.push("${env.DOCKER_IMAGE_TAG}")
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+}
