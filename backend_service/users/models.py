@@ -9,8 +9,10 @@ class User(AbstractUser):
         ('simple', 'Simple'),
         ('silver', 'Silver'),
         ('gold', 'Gold'),
+        ('architect', 'Architect'),
+        ('inquisition', 'Inquisition')
     ]
-    role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='simple')
+    role = models.CharField(max_length=15, choices=ROLE_CHOICES, default='simple')
     force_password_change = models.BooleanField(default=False)
     def __str__(self):
         """Return a string representation of the User model"""
@@ -34,7 +36,7 @@ class UserLoginIP(models.Model):
 class Government(models.Model):
     """Class for storing hashed IP addresses reported by users."""
     ip_hash = models.CharField(max_length=64, unique=True, null=False)
-    added_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reported_ips')
+    added_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reported_ips', null=True, blank=True)
 
     def set_ip(self, ip_address):
         """Hash and store an IP address using SHA-256"""

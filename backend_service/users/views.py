@@ -103,6 +103,12 @@ def login_user(request):
     """Authenticate a user and return a token"""
     serializer = LoginSerializer(data=request.data, context={'request': request})
     if serializer.is_valid():
+        if serializer.validated_data['user'].force_password_change:
+            return Response({
+            'user': {
+                'force_password_change': serializer.validated_data['user'].force_password_change,
+            }
+            }, status=status.HTTP_200_OK)
         return Response({
             'refresh': serializer.validated_data['refresh'],
             'access': serializer.validated_data['access'],
@@ -114,4 +120,35 @@ def login_user(request):
                 'force_password_change': serializer.validated_data['user'].force_password_change,
             }
         }, status=status.HTTP_200_OK)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['POST'])
+def reset_password(request):
+    """Change password for a given username"""
+    username = request.data.get('username')
+    new_password = request.data.get('new_password')
+    if not username or not new_password:
+        return Response({'error': 'Username and new password required'}, status=status.HTTP_400_BAD_REQUEST)
+    try:
+        user = User.objects.get(username=username)
+    except User.DoesNotExist:
+        return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+    if not user.force_password_change:
+        return Response({'error': 'Password change not allowed for this user'}, status=status.HTTP_403_FORBIDDEN)
+    user.password = make_password(new_password)
+    user.force_password_change = False 
+    user.save(update_fields=['password', 'force_password_change'])
+    return Response({'success': 'Password changed successfully'}, status=status.HTTP_200_OK)
+
+@api_view(['PATCH'])
+def change_user_role(request, username):
+    """Change the role of a user by username"""
+    try:
+        user = User.objects.get(username=username)
+    except User.DoesNotExist:
+        return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+    serializer = UserUpdateSerializer(user, data=request.data, partial=True)
+    if serializer.is_valid():
+        serializer.save()
+        return Response({'success': True}, status=status.HTTP_200_OK)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
