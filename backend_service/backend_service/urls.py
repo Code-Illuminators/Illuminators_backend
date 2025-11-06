@@ -11,6 +11,7 @@ urlpatterns = [
     path('api/auth/', include('users.urls')),
     path('api/posts/', include('posts.urls')),
     path('api/moderation/', include('moderation.urls')),
+    path('api/snapshot/', include('snapshot.urls')),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

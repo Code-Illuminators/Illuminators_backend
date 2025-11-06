@@ -127,7 +127,6 @@ def delete_all(request):
     GhostPost.objects.all().delete()
     OtherPost.objects.all().delete()
     EntryPassword.objects.all().delete()
-    Government.objects.all().delete()
 
     for user in User.objects.all():
         temp_pass = get_random_string(length=10)

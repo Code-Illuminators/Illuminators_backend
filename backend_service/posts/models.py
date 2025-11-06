@@ -9,7 +9,7 @@ class BasePost(models.Model):
     location = models.CharField(max_length=255)
     lat = models.FloatField(null=True, blank=True)
     lng = models.FloatField(null=True, blank=True)
-    image = models.ImageField(upload_to='photo_storage/')
+    image = models.ImageField(upload_to='./')
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

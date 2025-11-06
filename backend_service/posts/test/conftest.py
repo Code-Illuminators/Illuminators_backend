@@ -19,7 +19,7 @@ def bigfoot_post(user: User) -> BigfootPost:
         owner=user,
         location="Lviv",
         created_at="2023-10-10T10:00:00Z",
-        image="/photo_storage/photo_storage/ptah-3.jpg"
+        image="/photo_storage/ptah-3.jpg"
     )
 
 @pytest.fixture
@@ -30,7 +30,7 @@ def ufo_post(user: User) -> UfoPost:
         owner=user,
         location="Kyiv",
         created_at="2023-11-11T11:00:00Z",
-        image="/photo_storage/photo_storage/ptah-3_fRVkf9I.jpg"
+        image="/photo_storage/ptah-3_fRVkf9I.jpg"
     )
 
 @pytest.fixture
@@ -41,7 +41,7 @@ def ghost_post(user: User) -> GhostPost:
         owner=user,
         location="Odessa",
         created_at="2023-12-12T12:00:00Z",
-        image="/photo_storage/photo_storage/ptah-5.jpg"
+        image="/photo_storage/ptah-5.jpg"
     )
 
 @pytest.fixture
@@ -52,7 +52,7 @@ def other_post(user: User) -> OtherPost:
         owner=user,
         location="Kharkiv",
         created_at="2024-01-01T13:00:00Z",
-        image="/photo_storage/photo_storage/ptah-6.jpg"
+        image="/photo_storage/ptah-6.jpg"
     )
 
 @pytest.fixture()  
