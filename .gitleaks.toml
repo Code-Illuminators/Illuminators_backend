@@ -31,4 +31,5 @@ paths = [
     '''backend_service/posts/tests/.*''',
     '''backend_service/users/tests/.*''',
     '''backend_service/moderation/tests/.*''',
+    '''backend_service/snapshot/tests/.*''',
 ]
