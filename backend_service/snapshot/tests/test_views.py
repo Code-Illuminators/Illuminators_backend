@@ -1,6 +1,8 @@
 import pytest
 import logging
 import json
+from posts.test.conftest import user, api_client, bigfoot_post, ufo_post, ghost_post, other_post
+
 logger = logging.getLogger(__name__)
 
 @pytest.mark.django_db
